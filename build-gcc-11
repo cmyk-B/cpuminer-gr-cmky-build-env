@@ -1,0 +1,15 @@
+#!/bin/bash
+
+GCC_BRANCH="releases/gcc-11"
+GCC_SUFFIX="-11"
+GCC_PREFIX="/opt/gcc-11"
+
+git clone --depth 1 -b "$GCC_BRANCH" https://gcc.gnu.org/git/gcc.git gcc
+cd gcc
+contrib/download_prerequisites
+apt install flex -y
+mkdir build
+cd build
+../configure -v --build=x86_64-linux-gnu --host=x86_64-linux-gnu --target=x86_64-linux-gnu --prefix=$GCC_PREFIX --enable-checking=release --enable-languages=c,c++,fortran --disable-multilib --program-suffix=$GCC_SUFFIX
+make -j $(nproc)
+make install-strip
